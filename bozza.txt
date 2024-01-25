@@ -1,0 +1,50 @@
+
+- name: Stampare le informazioni delle credenziali K8s
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Recupera le credenziali per l'API URL K8S
+      awx.awx_credential:
+        name: "API_Credential"
+        credential_type: "Source Control"
+        inputs:
+          fields:
+            - id
+            - name
+            - inputs
+      delegate_to: localhost
+      register: api_credential
+
+    - name: Recupera le credenziali per K8s Credential
+      awx.awx.awx_credential:
+        name: "K8s_Credential"
+        credential_type: "K8s Credential"
+        inputs:
+          fields:
+            - id
+            - name
+            - inputs
+      delegate_to: localhost
+      register: k8s_credential
+
+    - name: Stampa API URL K8S
+      debug:
+        msg: "API URL K8S: {{ api_credential.inputs.fields.API_URL_K8S | default('Not provided') }}"
+
+    - name: Stampa Verify SSL Option
+      debug:
+        msg: "Verify SSL Option: {{ api_credential.inputs.fields.verify_ssl | default('True') }}"
+
+    - name: Stampa User
+      debug:
+        msg: "User: {{ k8s_credential.inputs.fields.username | default('Not provided') }}"
+
+    - name: Stampa Password
+      debug:
+        msg: "Password: {{ k8s_credential.inputs.fields.password | default('Not provided') }}"
+
+    - name: Stampa Namespace
+      debug:
+        msg: "Namespace: {{ k8s_credential.inputs.fields.namespace | default('Not provided') }}"
+awx module?
