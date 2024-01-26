@@ -1,7 +1,6 @@
 
 
----
----
+
 - name: Stampa le informazioni delle credenziali
   hosts: localhost
   gather_facts: no
@@ -28,4 +27,3 @@
     - name: Stampa Namespace
       debug:
         msg: "Namespace: {{ lookup('env', 'NAMESPACE') }}"
-...
