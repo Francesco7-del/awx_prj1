@@ -1,5 +1,4 @@
 
-
 ---
 - name: Stampare le informazioni delle credenziali K8s
   hosts: localhost
@@ -19,7 +18,7 @@
       register: api_credential
 
     - name: Recupera le credenziali per K8s Credential
-      awx.awx.awx_credential:
+      awx.awx_credential:
         name: "K8s_Credential"
         credential_type: "K8s Credential"
         inputs:
@@ -29,7 +28,6 @@
             - inputs
       delegate_to: localhost
       register: k8s_credential
-
 
     - name: Stampa API URL K8S
       debug:
@@ -54,4 +52,3 @@
     - name: Stampa Namespace
       debug:
         msg: "Namespace: {{ k8s_credential.inputs.fields.namespace | default('Not provided') }}"
-
