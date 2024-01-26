@@ -8,3 +8,27 @@
       debug:
         msg: "primpo tasks:"
 
+    - name: Stampare informazioni delle credenziali K8s
+      hosts: localhost
+      gather_facts: false
+
+      vars:
+        api_url_k8s: "{{ lookup('env', 'API_URL_K8S') }}"
+        verify_ssl_option: "{{ lookup('env', 'VERIFY_SSL_OPTION') }}"
+        token: "{{ lookup('env', 'TOKEN') }}"
+        user: "{{ lookup('env', 'USER') }}"
+        password: "{{ lookup('env', 'PASSWORD') }}"
+        namespace: "{{ lookup('env', 'NAMESPACE') }}"
+
+        debug_msg: |
+          API URL K8S: {{ api_url_k8s | default('Not provided') }}
+          Verify SSL Option: {{ verify_ssl_option | default('Not provided') }}
+          Token: {{ token | default('Not provided') }}
+          User: {{ user | default('Not provided') }}
+          Password: {{ password | default('Not provided') }}
+          Namespace: {{ namespace | default('Not provided') }}
+
+      tasks:
+        - name: Stampa Informazioni
+          debug:
+            msg: "{{ debug_msg }}"
