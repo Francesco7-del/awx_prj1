@@ -1,29 +1,37 @@
 
 
-
+---
 - name: Stampa le informazioni delle credenziali
   hosts: localhost
   gather_facts: no
+
   tasks:
-   - name: Stampa API URL K8S
+    - name: Stampa API URL K8S
       debug:
         msg: "primo task testawx"
+
     - name: Stampa API URL K8S
       debug:
         msg: "API URL K8S: {{ lookup('env', 'API_URL_K8S') }}"
+
     - name: Stampa Verify SSL Option
       debug:
         msg: "Verify SSL Option: {{ lookup('env', 'VERIFY_SSL_OPTION') }}"
+
     - name: Stampa Token
       debug:
         msg: "Token: {{ lookup('env', 'TOKEN') }}"
       when: lookup('env', 'TOKEN') is defined and lookup('env', 'TOKEN') != ''
+
     - name: Stampa User
       debug:
         msg: "User: {{ lookup('env', 'USER') }}"
+
     - name: Stampa Password
       debug:
         msg: "Password: {{ lookup('env', 'PASSWORD') }}"
+
     - name: Stampa Namespace
       debug:
         msg: "Namespace: {{ lookup('env', 'NAMESPACE') }}"
+
