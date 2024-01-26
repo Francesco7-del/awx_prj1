@@ -1,54 +1,32 @@
-
 ---
-- name: Stampare le informazioni delle credenziali K8s
+- name: Print K8S Credentials Information
   hosts: localhost
   gather_facts: false
-
   tasks:
-    - name: Recupera le credenziali per l'API URL K8S
-      awx.awx_credential:
-        name: "API_Credential"
-        credential_type: "Source Control"
-        inputs:
-          fields:
-            - id
-            - name
-            - inputs
-      delegate_to: localhost
-      register: api_credential
-
-    - name: Recupera le credenziali per K8s Credential
-      awx.awx_credential:
-        name: "K8s_Credential"
-        credential_type: "K8s Credential"
-        inputs:
-          fields:
-            - id
-            - name
-            - inputs
-      delegate_to: localhost
-      register: k8s_credential
-
-    - name: Stampa API URL K8S
+    - name: t1
       debug:
-        msg: "primo task"
+        msg: "test1"
 
-    - name: Stampa API URL K8S
+    - name: Retrieve and Print K8S API URL
       debug:
-        msg: "API URL K8S: {{ api_credential.inputs.fields.API_URL_K8S | default('Not provided') }}"
+        msg: "K8S API URL: {{ lookup('env', 'API URL K8S') }}"
 
-    - name: Stampa Verify SSL Option
+    - name: Retrieve and Print K8S Verify SSL Option
       debug:
-        msg: "Verify SSL Option: {{ api_credential.inputs.fields.verify_ssl | default('True') }}"
+        msg: "K8S Verify SSL: {{ lookup('env', 'K8S_VERIFY_SSL') }}"
 
-    - name: Stampa User
+    - name: Retrieve and Print K8S Token if provided
       debug:
-        msg: "User: {{ k8s_credential.inputs.fields.username | default('Not provided') }}"
+        msg: "K8S Token: {{ lookup('env', 'K8S_TOKEN') }}"
 
-    - name: Stampa Password
+    - name: Retrieve and Print K8S User
       debug:
-        msg: "Password: {{ k8s_credential.inputs.fields.password | default('Not provided') }}"
+        msg: "K8S User: {{ lookup('env', 'K8S_USER') }}"
 
-    - name: Stampa Namespace
+    - name: Retrieve and Print K8S Password
       debug:
-        msg: "Namespace: {{ k8s_credential.inputs.fields.namespace | default('Not provided') }}"
+        msg: "K8S Password: {{ lookup('env', 'K8S_PASSWORD') }}"
+
+    - name: Retrieve and Print K8S Namespace
+      debug:
+        msg: "K8S Namespace: {{ lookup('env', 'K8S_NAMESPACE') }}"
