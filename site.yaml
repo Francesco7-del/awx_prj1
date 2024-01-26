@@ -1,32 +1,34 @@
----
-- name: Print K8S Credentials Information
+
+- name: Stampare le informazioni delle credenziali K8s
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: t1
+    - name: Recupera le credenziali per l'API URL K8S
+      set_fact:
+        api_credential: "{{ lookup('env', 'CRED_TEST1') }}"
+    - name: Debug API Credential
       debug:
-        msg: "test1"
+        var: api_credential
 
-    - name: Retrieve and Print K8S API URL
-      debug:
-        msg: "K8S API URL: {{ lookup('env', 'API URL K8S') }}"
+    - name: Recupera le credenziali per K8s Credential
+      set_fact:
+        k8s_credential:
+          user: "{{ lookup('env', 'USER') }}"
+          password: "{{ lookup('env', 'PASSWORD') }}"
+          namespace: "{{ lookup('env', 'NAMESPACE') }}"
 
-    - name: Retrieve and Print K8S Verify SSL Option
+    - name: Stampa API URL K8S
       debug:
-        msg: "K8S Verify SSL: {{ lookup('env', 'K8S_VERIFY_SSL') }}"
+        msg: "API URL K8S: {{ api_credential }}"
 
-    - name: Retrieve and Print K8S Token if provided
+    - name: Stampa User
       debug:
-        msg: "K8S Token: {{ lookup('env', 'K8S_TOKEN') }}"
+        msg: "User: {{ k8s_credential.user }}"
 
-    - name: Retrieve and Print K8S User
+    - name: Stampa Password
       debug:
-        msg: "K8S User: {{ lookup('env', 'K8S_USER') }}"
+        msg: "Password: {{ k8s_credential.password }}"
 
-    - name: Retrieve and Print K8S Password
+    - name: Stampa Namespace
       debug:
-        msg: "K8S Password: {{ lookup('env', 'K8S_PASSWORD') }}"
-
-    - name: Retrieve and Print K8S Namespace
-      debug:
-        msg: "K8S Namespace: {{ lookup('env', 'K8S_NAMESPACE') }}"
+        msg: "Namespace: {{ k8s_credential.namespace }}"
