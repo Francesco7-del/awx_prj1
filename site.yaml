@@ -1,34 +1,122 @@
 
-- name: Stampare le informazioni delle credenziali K8s
+- name: Stampare le informazioni delle credenziali
   hosts: localhost
+  connection: local
   gather_facts: false
+  vars:
+    user: "francesco"
+    namespace: "ns1"
+    password: "password"
+    api_url_k8s: "XXxxxxx"
+    verify_ssl: "false"
   tasks:
-    - name: Recupera le credenziali per l'API URL K8S
+    # - name: Recupera le credenziali per l'API URL
+    #   awx.awx.credential:
+    #     name: "CRED_TEST1"
+    #     credential_type: Source Control
+    #     validate_certs: false
+    #   register: api_credential
+
+    - name: Creare tipo di credenziale K8s Credential
+      awx.awx.credential_type:
+        name: "FC_K8S_TEST_play"
+        kind: "cloud"
+        inputs:
+          fields:
+            - id: "user"
+              label: "User"
+              type: "string"
+            - id: "password"
+              label: "Password"
+              secret: true
+              type: "string"
+            - id: "namespace"
+              label: "Namespace"
+              type: "string"
+            - id: "CUSTOM_API_URL_K8S"
+              label: "API URL K8S"
+              type: "string"
+            - id: "CUSTOM_VERIFY_SSL"
+              label: "Verify SSL"
+              type: "boolean"
+        validate_certs: false
+        injectors:
+          env:
+            CUSTOM_K8S_USER: "{{ user }}"
+            CUSTOM_K8S_PASSWORD: "{{ password }}"
+            CUSTOM_K8S_NAMESPACE: "{{ namespace }}"
+            CUSTOM_API_URL_K8S: "{{ api_url_k8s }}"
+            CUSTOM_VERIFY_SSL: "{{ verify_ssl }}"
+      register: k8s_credential_type
+
+
+
+    - name: Recupera le credenziali tramite ID
+      uri:
+        url: "https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2/credentials/16/"
+        method: GET
+        user: francesco.cerenzia
+        password: password
+        force_basic_auth: yes
+        status_code: 200
+        return_content: yes
+        validate_certs: false
+      register: response
+
+    # - name: Stampa api_credential
+    #   debug:
+    #     var: api_credential
+
+    # - name: Stampa response
+    #   debug:
+    #     var: response
+
+    - name: Estrarre i valori
       set_fact:
-        api_credential: "{{ lookup('env', 'CRED_TEST1') }}"
-    - name: Debug API Credential
-      debug:
-        var: api_credential
+        custom_api_url_k8s: "{{ response.json.inputs.CUSTOM_API_URL_K8S }}"
+        custom_verify_ssl: "{{ response.json.inputs.CUSTOM_VERIFY_SSL}}"
 
-    - name: Recupera le credenziali per K8s Credential
+    - name: Stampa i valori CUSTOM_API_URL_K8S  CUSTOM_VERIFY_SSL
+      debug:
+        msg: "CUSTOM_API_URL_K8S: {{ custom_api_url_k8s }}, CUSTOM_VERIFY_SSL: {{ custom_verify_ssl }}"
+
+
+    - name: Ottieni il token
+      awx.awx.token:
+        controller_host: "https://test-awx-aap-test.apps.okd.pecsvil.local/"
+        controller_username: "francesco.cerenzia"
+        controller_password: "password"
+      register: token_output
+
+    - name: Estrarre il token
       set_fact:
-        k8s_credential:
-          user: "{{ lookup('env', 'USER') }}"
-          password: "{{ lookup('env', 'PASSWORD') }}"
-          namespace: "{{ lookup('env', 'NAMESPACE') }}"
+        awx_token: "{{ token_output.ansible_facts.controller_token.token | default('') }}"
 
-    - name: Stampa API URL K8S
+    - name: Stampa il token se presente
       debug:
-        msg: "API URL K8S: {{ api_credential }}"
+        var: awx_token
+      when: awx_token != ''
 
-    - name: Stampa User
-      debug:
-        msg: "User: {{ k8s_credential.user }}"
+    # - name: Stampa il token se presente
+    #   debug:
+    #     var: token_output
 
-    - name: Stampa Password
-      debug:
-        msg: "Password: {{ k8s_credential.password }}"
+    - name: Recupera le informazioni della credenziale tramite ID
+      uri:
+        url: "https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2//credential_types/31/"
+        method: GET
+        user: francesco.cerenzia
+        password: password
+        force_basic_auth: yes
+        status_code: 200
+        return_content: yes
+        validate_certs: false
+      register: k8s_credential_info
 
-    - name: Stampa Namespace
+    # - name: Stampa le informazioni k8s_credential_info
+    #   debug:
+    #     var: k8s_credential_info
+
+    - name: Stampa le informazioni della credenziale
       debug:
-        msg: "Namespace: {{ k8s_credential.namespace }}"
+        var: k8s_credential_info.json.inputs.fields
