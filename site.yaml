@@ -67,14 +67,17 @@
     #   debug:
     #     var: api_credential
 
-    # - name: Stampa response
-    #   debug:
-    #     var: response
+    - name: Stampa response
+      debug:
+        var: response
 
     - name: Estrarre i valori
       set_fact:
         custom_api_url_k8s: "{{ response.json.inputs.CUSTOM_API_URL_K8S }}"
-        custom_verify_ssl: "{{ response.json.inputs.CUSTOM_VERIFY_SSL}}"
+        custom_verify_ssl: "{{ response.json.inputs.CUSTOM_VERIFY_SSL }}"
+        user: "{{ response.json.inputs.user }}"
+        password: "{{ response.json.inputs.VALUE_SPECIFIED_IN_NO_LOG_PARAMETER }}"
+        namespace: "{{ response.json.inputs.namespace }}"
 
     - name: Stampa i valori CUSTOM_API_URL_K8S  CUSTOM_VERIFY_SSL
       debug:
@@ -103,7 +106,20 @@
 
     - name: Recupera le informazioni della credenziale tramite ID
       uri:
-        url: "https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2//credential_types/31/"
+        url: "https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2/credential_types/31/"
+        method: GET
+        user: francesco.cerenzia
+        password: password
+        force_basic_auth: yes
+        status_code: 200
+        return_content: yes
+        validate_certs: false
+      register: k8s_credential_info_custom
+
+
+    - name: Recupera le informazioni della credenziale tramite ID
+      uri:
+        url: "https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2//credential_types/30/"
         method: GET
         user: francesco.cerenzia
         password: password
@@ -113,10 +129,17 @@
         validate_certs: false
       register: k8s_credential_info
 
-    # - name: Stampa le informazioni k8s_credential_info
-    #   debug:
-    #     var: k8s_credential_info
-
     - name: Stampa le informazioni della credenziale
       debug:
-        var: k8s_credential_info.json.inputs.fields
+        msg:
+          - "API URL K8S: {{ custom_api_url_k8s }}"
+          - "Verify SSL Option: {{ custom_verify_ssl }}"
+          - "User: {{ user }}"
+          - "Password: {{ password }}"
+          - "Namespace: {{ namespace }}"
+      no_log: false
+
+
+    # - name: Stampa le informazioni della k8s_credential_info_custom
+    #   debug:
+    #     var: k8s_credential_info_custom.json.inputs.fields
