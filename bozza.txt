@@ -6,7 +6,7 @@
   tasks:
     - name: Recupera le credenziali per l'API URL K8S
       awx.awx_credential:
-        name: "API_Credential"
+        name: "CRED_TEST1"
         credential_type: "Source Control"
         inputs:
           fields:
@@ -17,8 +17,8 @@
       register: api_credential
 
     - name: Recupera le credenziali per K8s Credential
-      awx.awx.awx_credential:
-        name: "K8s_Credential"
+      awx.awx_credential:
+        name: "FF_K8s_Credential"
         credential_type: "K8s Credential"
         inputs:
           fields:
@@ -34,7 +34,7 @@
 
     - name: Stampa Verify SSL Option
       debug:
-        msg: "Verify SSL Option: {{ api_credential.inputs.fields.verify_ssl | default('True') }}"
+        msg: "Verify SSL Option: {{ api_credential.inputs.fields.verify_ssl }}"
 
     - name: Stampa User
       debug:
@@ -47,4 +47,46 @@
     - name: Stampa Namespace
       debug:
         msg: "Namespace: {{ k8s_credential.inputs.fields.namespace | default('Not provided') }}"
-awx module?
+
+
+---
+- name: Creare tipo di credenziale K8s
+  awx.awx.credential_type:
+    name: "K8s Credential"
+    kind: "cloud"
+    inputs:
+      fields:
+        - id: "api_url_k8s"
+          label: "API URL K8S"
+          type: "string"
+        - id: "verify_ssl"
+          label: "Verify SSL Option"
+          type: "boolean"
+    injectors:
+      env:
+        CUSTOM_API_URL_K8S: "{{ api_url_k8s }}"
+        CUSTOM_VERIFY_SSL: "{{ verify_ssl }}"
+
+-------
+fields:
+  - id: username
+    type: string
+    label: Username
+  - id: password
+    type: string
+    label: Password
+    secret: true
+  - id: namespace
+    type: string
+    label: Namespace
+required:
+  - username
+  - password
+  - namespace
+
+ env:
+        CUSTOM_K8S_USER: "{{ user }}"
+        CUSTOM_K8S_PASSWORD: "{{ password }}"
+             CUSTOM_K8S_NAMESPACE: "{{ namespace }}"
+
+  https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2/tokens/

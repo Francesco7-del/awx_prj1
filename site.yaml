@@ -51,7 +51,7 @@
 
 
 
-    - name: Recupera le credenziali tramite ID
+    - name: Recupera le credenziali tramite ID 16
       uri:
         url: "https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2/credentials/16/"
         method: GET
@@ -67,11 +67,11 @@
     #   debug:
     #     var: api_credential
 
-    - name: Stampa response
-      debug:
-        var: response
+    # - name: Stampa response
+    #   debug:
+    #     var: response
 
-    - name: Estrarre i valori
+    - name: Estrarre i valori FC_TEST_K8S_CRED
       set_fact:
         custom_api_url_k8s: "{{ response.json.inputs.CUSTOM_API_URL_K8S }}"
         custom_verify_ssl: "{{ response.json.inputs.CUSTOM_VERIFY_SSL }}"
@@ -104,9 +104,9 @@
     #   debug:
     #     var: token_output
 
-    - name: Recupera le informazioni della credenziale tramite ID
+    - name: Recupera le informazioni della credenziale tramite ID val17
       uri:
-        url: "https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2/credential_types/31/"
+        url: "https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2/credentials/17/"
         method: GET
         user: francesco.cerenzia
         password: password
@@ -117,7 +117,7 @@
       register: k8s_credential_info_custom
 
 
-    - name: Recupera le informazioni della credenziale tramite ID
+    - name: Recupera le informazioni della credenziale tramite ID val30
       uri:
         url: "https://test-awx-aap-test.apps.okd.pecsvil.local/api/v2//credential_types/30/"
         method: GET
@@ -129,7 +129,7 @@
         validate_certs: false
       register: k8s_credential_info
 
-    - name: Stampa le informazioni della credenziale
+    - name: Stampa le informazioni della credenziale FC_TEST_K8S_CRED
       debug:
         msg:
           - "API URL K8S: {{ custom_api_url_k8s }}"
@@ -137,9 +137,8 @@
           - "User: {{ user }}"
           - "Password: {{ password }}"
           - "Namespace: {{ namespace }}"
-      no_log: false
 
 
-    # - name: Stampa le informazioni della k8s_credential_info_custom
-    #   debug:
-    #     var: k8s_credential_info_custom.json.inputs.fields
+    - name: Stampa le informazioni della FC_TESTK8S_2
+      debug:
+        var: k8s_credential_info_custom.json.inputs
