@@ -5,51 +5,42 @@
   gather_facts: false
   vars:
     user: "francesco"
-    namespace: "ns1"
+    k8s_namespace: "ns1"
     password: "password"
     api_url_k8s: "XXxxxxx"
     verify_ssl: "false"
   tasks:
-    # - name: Recupera le credenziali per l'API URL
-    #   awx.awx.credential:
-    #     name: "CRED_TEST1"
-    #     credential_type: Source Control
+    # - name: Creare tipo di credenziale K8s Credential
+    #   awx.awx.credential_type:
+    #     name: "FC_K8S_TEST_play"
+    #     kind: "cloud"
+    #     inputs:
+    #       fields:
+    #         - id: "user"
+    #           label: "User"
+    #           type: "string"
+    #         - id: "password"
+    #           label: "Password"
+    #           secret: true
+    #           type: "string"
+    #         - id: "k8s_namespace"
+    #           label: "Namespace"
+    #           type: "string"
+    #         - id: "CUSTOM_API_URL_K8S"
+    #           label: "API URL K8S"
+    #           type: "string"
+    #         - id: "CUSTOM_VERIFY_SSL"
+    #           label: "Verify SSL"
+    #           type: "boolean"
     #     validate_certs: false
-    #   register: api_credential
-
-    - name: Creare tipo di credenziale K8s Credential
-      awx.awx.credential_type:
-        name: "FC_K8S_TEST_play"
-        kind: "cloud"
-        inputs:
-          fields:
-            - id: "user"
-              label: "User"
-              type: "string"
-            - id: "password"
-              label: "Password"
-              secret: true
-              type: "string"
-            - id: "namespace"
-              label: "Namespace"
-              type: "string"
-            - id: "CUSTOM_API_URL_K8S"
-              label: "API URL K8S"
-              type: "string"
-            - id: "CUSTOM_VERIFY_SSL"
-              label: "Verify SSL"
-              type: "boolean"
-        validate_certs: false
-        injectors:
-          env:
-            CUSTOM_K8S_USER: "{{ user }}"
-            CUSTOM_K8S_PASSWORD: "{{ password }}"
-            CUSTOM_K8S_NAMESPACE: "{{ namespace }}"
-            CUSTOM_API_URL_K8S: "{{ api_url_k8s }}"
-            CUSTOM_VERIFY_SSL: "{{ verify_ssl }}"
-      register: k8s_credential_type
-
-
+    #     injectors:
+    #       env:
+    #         CUSTOM_K8S_USER: "{{ user }}"
+    #         CUSTOM_K8S_PASSWORD: "{{ password }}"
+    #         CUSTOM_K8S_NAMESPACE: "{{ k8s_namespace }}"
+    #         CUSTOM_API_URL_K8S: "{{ api_url_k8s }}"
+    #         CUSTOM_VERIFY_SSL: "{{ verify_ssl }}"
+    #   register: k8s_credential_type
 
     - name: Recupera le credenziali tramite ID 16
       uri:
@@ -83,7 +74,6 @@
       debug:
         msg: "CUSTOM_API_URL_K8S: {{ custom_api_url_k8s }}, CUSTOM_VERIFY_SSL: {{ custom_verify_ssl }}"
 
-
     - name: Ottieni il token
       awx.awx.token:
         controller_host: "https://test-awx-aap-test.apps.okd.pecsvil.local/"
@@ -115,7 +105,6 @@
         return_content: yes
         validate_certs: false
       register: k8s_credential_info_custom
-
 
     - name: Recupera le informazioni della credenziale tramite ID val30
       uri:
