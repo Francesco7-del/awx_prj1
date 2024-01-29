@@ -79,6 +79,7 @@
         controller_host: "https://test-awx-aap-test.apps.okd.pecsvil.local/"
         controller_username: "francesco.cerenzia"
         controller_password: "password"
+        validate_certs: false
       register: token_output
 
     - name: Estrarre il token
@@ -131,3 +132,7 @@
     - name: Stampa le informazioni della FC_TESTK8S_2
       debug:
         var: k8s_credential_info_custom.json.inputs
+
+    - name: Stampa le informazioni della CRED type creata
+      debug:
+        var: k8s_credential_info.json.inputs
