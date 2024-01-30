@@ -2,5 +2,5 @@
 CUSTOM_K8S_USER: 'francesco'
 CUSTOM_K8S_PASSWORD: 'password'
 CUSTOM_K8S_NAMESPACE: 'ns1'
-CUSTOM_API_URL_K8S: 'XXxxxxx'
-CUSTOM_VERIFY_SSL: 'false'
+CUSTOM_API_URL_K8S: ' https://kubernetes-api.ese.xxx'
+CUSTOM_VERIFY_SSL: false
