@@ -10,37 +10,6 @@
     api_url_k8s: "XXxxxxx"
     verify_ssl: "false"
   tasks:
-    # - name: Creare tipo di credenziale K8s Credential
-    #   awx.awx.credential_type:
-    #     name: "FC_K8S_TEST_play"
-    #     kind: "cloud"
-    #     inputs:
-    #       fields:
-    #         - id: "user"
-    #           label: "User"
-    #           type: "string"
-    #         - id: "password"
-    #           label: "Password"
-    #           secret: true
-    #           type: "string"
-    #         - id: "k8s_namespace"
-    #           label: "Namespace"
-    #           type: "string"
-    #         - id: "CUSTOM_API_URL_K8S"
-    #           label: "API URL K8S"
-    #           type: "string"
-    #         - id: "CUSTOM_VERIFY_SSL"
-    #           label: "Verify SSL"
-    #           type: "boolean"
-    #     validate_certs: false
-    #     injectors:
-    #       env:
-    #         CUSTOM_K8S_USER: "{{ user }}"
-    #         CUSTOM_K8S_PASSWORD: "{{ password }}"
-    #         CUSTOM_K8S_NAMESPACE: "{{ k8s_namespace }}"
-    #         CUSTOM_API_URL_K8S: "{{ api_url_k8s }}"
-    #         CUSTOM_VERIFY_SSL: "{{ verify_ssl }}"
-    #   register: k8s_credential_type
 
     - name: Recupera le credenziali tramite ID 16
       uri:
