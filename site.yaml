@@ -7,7 +7,7 @@
     - vars.yaml
   tasks:
 
-      - name: Stampa le informazioni della credenziale FC_TEST_K8S_CRED
+      - name: Stampa le informazioni della credenziale
         debug:
           msg:
             - "API URL K8S: {{ CUSTOM_API_URL_K8S }}"
@@ -15,3 +15,16 @@
             - "User: {{ CUSTOM_K8S_USER }}"
             - "Password: {{ CUSTOM_K8S_PASSWORD }}"
             - "Namespace: {{ CUSTOM_K8S_NAMESPACE }}"
+
+      - name: Stampa le variabili d'ambiente
+        debug:
+          msg: "{{ lookup('env', 'CUSTOM_API_URL_K8S') }}"
+
+      - name: Stampa le informazioni della credenziale FC_TEST_K8S_CRED
+        debug:
+          msg:
+            - "API URL K8S: {{ lookup('env', 'CUSTOM_API_URL_K8S') }}"
+            - "Verify SSL Option: {{ lookup('env', 'CUSTOM_VERIFY_SSL') }}"
+            - "User: {{ lookup('env', 'CUSTOM_K8S_USER') }}"
+            - "Password: {{ lookup('env', 'CUSTOM_K8S_PASSWORD') }}"
+            - "Namespace: {{ lookup('env', 'CUSTOM_K8S_NAMESPACE') }}"
