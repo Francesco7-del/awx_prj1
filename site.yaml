@@ -3,8 +3,8 @@
   hosts: localhost
   connection: local
   gather_facts: false
-  # vars_files:
-  #   - vars.yaml
+  vars_files:
+    - vars.yaml
   tasks:
 
       - name: Stampa le informazioni della credenziale FC_TEST_K8S_CRED
