@@ -89,9 +89,9 @@
       register: k8s_credential_info
 
     - name: Attesa conferma
-        pause:
-          prompt: "Conferma view parametri Credential==> "
-          minutes: 2
+      pause:
+        prompt: "Conferma view parametri Credential==> "
+        minutes: 2
 
     - name: Stampa le informazioni della credenziale FC_TEST_K8S_CRED
       debug:
